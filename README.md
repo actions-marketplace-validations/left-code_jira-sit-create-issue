@@ -1,7 +1,7 @@
 # Create a Container Action
 
-![Continuous Integration](https://github.com/actions/container-action/actions/workflows/ci.yml/badge.svg)
-![Linter](https://github.com/actions/container-action/actions/workflows/linter.yml/badge.svg)
+![Continuous Integration](https://github.com/actions/jira-sit-create-issue/actions/workflows/ci.yml/badge.svg)
+![Linter](https://github.com/actions/jira-sit-create-issue/actions/workflows/linter.yml/badge.svg)
 
 Use this template to bootstrap the creation of a container action. :rocket:
 
@@ -38,11 +38,8 @@ need to perform some initial setup steps before you can develop your action.
 
 1. :hammer_and_wrench: Build the container
 
-   Make sure to replace `actions/container-action` with an appropriate label for
-   your container.
-
    ```bash
-   docker build -t actions/container-action .
+   docker build -t actions/jira-sit-create-issue .
    ```
 
 1. :white_check_mark: Test the container
@@ -50,7 +47,7 @@ need to perform some initial setup steps before you can develop your action.
    You can pass individual environment variables using the `--env` or `-e` flag.
 
    ```bash
-   $ docker run --env INPUT_WHO_TO_GREET="Mona Lisa Octocat" actions/container-action
+   $ docker run --env INPUT_WHO_TO_GREET="Mona Lisa Octocat" actions/jira-sit-create-issue
    ::notice file=entrypoint.sh,line=7::Hello, Mona Lisa Octocat!
    ```
 
@@ -60,7 +57,7 @@ need to perform some initial setup steps before you can develop your action.
    $ cat ./.env.test
    INPUT_WHO_TO_GREET="Mona Lisa Octocat"
 
-   $ docker run --env-file ./.env.test actions/container-action
+   $ docker run --env-file ./.env.test actions/jira-sit-create-issue
    ::notice file=entrypoint.sh,line=7::Hello, Mona Lisa Octocat!
    ```
 
@@ -133,8 +130,8 @@ So, what are you waiting for? Go ahead and start customizing your action!
 1. Build and test the container
 
    ```bash
-   docker build -t actions/container-action .
-   docker run actions/container-action "Mona Lisa Octocat"
+   docker build -t actions/jira-sit-create-issue .
+   docker run actions/jira-sit-create-issue "Mona Lisa Octocat"
    ```
 
 1. Commit your changes
@@ -183,7 +180,7 @@ steps:
 ```
 
 For example workflow runs, check out the
-[Actions tab](https://github.com/actions/container-action/actions)! :rocket:
+[Actions tab](https://github.com/actions/jira-sit-create-issue/actions)! :rocket:
 
 ## Usage
 
@@ -204,7 +201,7 @@ steps:
 
   - name: Test Local Action
     id: test-action
-    uses: actions/container-action@v1 # Commit with the `v1` tag
+    uses: actions/jira-sit-create-issue@v1 # Commit with the `v1` tag
     with:
       who-to-greet: Mona Lisa Octocat
 

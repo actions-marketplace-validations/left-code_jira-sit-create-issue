@@ -1,26 +1,15 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: Create Jira SIT Issue
+description: A GitHub Action to create a Jira SIT issue.
+author: left-code
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: heart
-  color: red
+  icon: terminal
+  color: blue
 
-# Define your inputs here.
-inputs:
-  who-to-greet:
-    description: Your input description here
-    required: true
-    default: World
-
-# Define your outputs here.
 outputs:
-  greeting:
-    description: Your output description here
+  jira_issue_id:
+    description: The ID of the created Jira issue.
 
 runs:
   using: docker
   image: Dockerfile
-  env:
-    INPUT_WHO_TO_GREET: ${{ inputs.who-to-greet }}
