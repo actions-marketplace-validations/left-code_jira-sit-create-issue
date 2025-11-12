@@ -57,9 +57,9 @@ The ID/key of the created Jira issue (e.g., `PROJ-123`).
 - name: Create Jira Issue
   uses: left-code/jira-sit-create-issue@v1
   with:
-    jira_url: ${{ secrets.JIRA_URL }}
-    jira_pat: ${{ secrets.JIRA_PAT }}
-    jira_user: ${{ secrets.JIRA_USER }}
+    jira_url: ${{ secrets.URL }}
+    jira_pat: ${{ secrets.PAT }}
+    jira_user: ${{ secrets.USER }}
     jira_project_key: 'PROJ'
     jira_project_board_name: 'Project Board'
     jira_issue_type: 'Task'
@@ -79,9 +79,9 @@ Alternatively, you can use environment variables instead of inputs:
 - name: Create Jira Issue
   uses: left-code/jira-sit-create-issue@v1
   env:
-    JIRA_URL: ${{ secrets.JIRA_URL }}
-    JIRA_PAT: ${{ secrets.JIRA_PAT }}
-    JIRA_USER: ${{ secrets.JIRA_USER }}
+    JIRA_URL: ${{ secrets.URL }}
+    JIRA_PAT: ${{ secrets.PAT }}
+    JIRA_USER: ${{ secrets.USER }}
     JIRA_PROJECT_KEY: 'PROJ'
     JIRA_PROJECT_BOARD_NAME: 'Project Board'
     JIRA_ISSUE_TYPE: 'Task'
@@ -93,7 +93,7 @@ Alternatively, you can use environment variables instead of inputs:
 
 1. Create a Jira Personal Access Token in your Jira account
 2. Add the following secrets to your GitHub repository:
-   - `JIRA_URL`: Your Jira instance URL
-   - `JIRA_PAT`: Your Jira Personal Access Token
-   - `JIRA_USER`: Your Jira username
+   - `URL`: Your Jira instance URL
+   - `PAT`: Your Jira Personal Access Token
+   - `USER`: Your Jira username
 3. Configure the action inputs or environment variables as needed
