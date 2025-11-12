@@ -1,6 +1,6 @@
 # Create Jira Issue
 
-This GitHub Action creates a Jira issue and optionally assigns it to the current sprint and release. It uses the Jira REST API to interact with your Jira instance and supports various configuration options for issue creation.
+This GitHub Action creates a Jira issue and optionally assigns it to the current sprint and release. It uses the Jira REST API to interact with your Jira instance and supports various configuration options for issue creation, including setting the issue status after creation.
 
 ## Inputs
 
@@ -28,6 +28,10 @@ This GitHub Action creates a Jira issue and optionally assigns it to the current
 
 **Required** The type of issue to create (e.g., `Task`, `Bug`, `Story`, `External Request`).
 
+### `issue_status`
+
+**Optional** The status to set for the created issue after creation (e.g., `In Progress`, `Done`, `To Do`). If not provided, the issue will remain in its default status.
+
 ### `assign_to_current_sprint`
 
 **Optional** Whether to assign the issue to the current active sprint. Default: `false`.
@@ -46,6 +50,7 @@ The ID/key of the created Jira issue (e.g., `PROJ-123`).
 
 - Creates Jira issues using REST API v3
 - Supports Basic authentication with username and PAT
+- Sets issue status after creation using transitions (optional)
 - Automatically assigns issues to current active sprint (optional)
 - Automatically assigns issues to current unreleased version (optional)
 - Uses Atlassian Document Format (ADF) for issue descriptions
@@ -63,6 +68,7 @@ The ID/key of the created Jira issue (e.g., `PROJ-123`).
     jira_project_key: 'PROJ'
     jira_project_board_name: 'Project Board'
     jira_issue_type: 'Task'
+    jira_issue_status: 'In Progress'
     jira_assign_to_current_sprint: 'true'
     jira_assign_to_current_release: 'true'
   id: create-issue
@@ -85,6 +91,7 @@ Alternatively, you can use environment variables instead of inputs:
     JIRA_PROJECT_KEY: 'PROJ'
     JIRA_PROJECT_BOARD_NAME: 'Project Board'
     JIRA_ISSUE_TYPE: 'Task'
+    JIRA_ISSUE_STATUS: 'In Progress'
     JIRA_ASSIGN_TO_CURRENT_SPRINT: 'true'
     JIRA_ASSIGN_TO_CURRENT_RELEASE: 'true'
 ```

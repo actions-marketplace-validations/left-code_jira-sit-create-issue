@@ -19,6 +19,9 @@ param (
     [string] $IssueType = $Env:JIRA_ISSUE_TYPE,
 
     [Parameter()]
+    [string] $IssueStatus = $Env:JIRA_ISSUE_STATUS,
+
+    [Parameter()]
     [bool] $assigntoCurrentSprint = ($Env:JIRA_ASSIGN_TO_CURRENT_SPRINT -eq 'True'),
 
     [Parameter()]
@@ -139,5 +142,54 @@ function New-JiraIssue {
     return $response.key
 }
 
+function Get-JiraIssueStatusId {
+    param (
+        [string] $JiraUrl,
+        [string] $IssueKey,
+        [string] $JiraUser,
+        [string] $JiraPat,
+        [string] $StatusName
+    )
+
+    $headers = Get-JiraAuthHeader -JiraUser $JiraUser -JiraPat $JiraPat
+
+    $response = Invoke-RestMethod -Uri "$JiraUrl/rest/api/3/issue/$IssueKey/transitions" -Headers $headers -Method Get
+    $transitions = $response | Select-Object -ExpandProperty transitions
+    $transition = $transitions | Where-Object { $_.to.name -eq $StatusName }
+    return $transition.id
+}
+
+function Set-JiraIssueStatus {
+    param (
+        [string] $JiraUrl,
+        [string] $IssueKey,
+        [string] $TransitionId,
+        [string] $JiraUser,
+        [string] $JiraPat
+    )
+
+    $headers = Get-JiraAuthHeader -JiraUser $JiraUser -JiraPat $JiraPat
+    $headers += @{
+        Accept = "application/json"
+    }
+
+    $body = @{
+        transition = @{
+            id = $TransitionId
+        }
+    } | ConvertTo-Json
+
+    $response = Invoke-RestMethod -Uri "$JiraUrl/rest/api/3/issue/$IssueKey/transitions" -Headers $headers -Method Post -Body $body
+    return $response
+}
+
 $newIssue = New-JiraIssue -JiraUrl $JiraUrl -ProjectKey $ProjectKey -Summary "Test issue from Actions with current Sprint and Release" -Description "Created using Actions via REST API and assigned to current Sprint and latest Release" -IssueType "External Request" -JiraUser $JiraUser -JiraPat $JiraPat
+
+if ($IssueStatus) {
+    $transitionId = Get-JiraIssueStatusId -JiraUrl $JiraUrl -IssueKey $newIssue -JiraUser $JiraUser -JiraPat $JiraPat -StatusName $IssueStatus
+    if ($transitionId) {
+        Set-JiraIssueStatus -JiraUrl $JiraUrl -IssueKey $newIssue -TransitionId $transitionId -JiraUser $JiraUser -JiraPat $JiraPat
+    }
+}
+
 echo "jira_issue_id=$($newIssue)" >> $env:GITHUB_OUTPUT

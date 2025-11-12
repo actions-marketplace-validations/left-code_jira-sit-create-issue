@@ -33,6 +33,9 @@ inputs:
   jira_issue_type:
     description: The type of issue to create (e.g., Task, Bug, Story)
     required: true
+  jira_issue_status:
+    description: The status to set for the created issue (optional)
+    required: false
   jira_assign_to_current_sprint:
     description: Whether to assign the issue to the current sprint (true/false)
     required: false
