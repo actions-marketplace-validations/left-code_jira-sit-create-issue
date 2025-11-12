@@ -28,6 +28,14 @@ This GitHub Action creates a Jira issue and optionally assigns it to the current
 
 **Required** The type of issue to create (e.g., `Task`, `Bug`, `Story`, `External Request`).
 
+### `issue_summary`
+
+**Required** The summary/title of the issue to create.
+
+### `issue_description`
+
+**Required** The description of the issue to create.
+
 ### `issue_status`
 
 **Optional** The status to set for the created issue after creation (e.g., `In Progress`, `Done`, `To Do`). If not provided, the issue will remain in its default status.
@@ -50,6 +58,7 @@ The ID/key of the created Jira issue (e.g., `PROJ-123`).
 
 - Creates Jira issues using REST API v3
 - Supports Basic authentication with username and PAT
+- Customizable issue summary and description
 - Sets issue status after creation using transitions (optional)
 - Automatically assigns issues to current active sprint (optional)
 - Automatically assigns issues to current unreleased version (optional)
@@ -68,6 +77,8 @@ The ID/key of the created Jira issue (e.g., `PROJ-123`).
     jira_project_key: 'PROJ'
     jira_project_board_name: 'Project Board'
     jira_issue_type: 'Task'
+    jira_issue_summary: 'Automated issue from GitHub Actions'
+    jira_issue_description: 'This issue was created automatically by GitHub Actions workflow'
     jira_issue_status: 'In Progress'
     jira_assign_to_current_sprint: 'true'
     jira_assign_to_current_release: 'true'
@@ -91,6 +102,8 @@ Alternatively, you can use environment variables instead of inputs:
     JIRA_PROJECT_KEY: 'PROJ'
     JIRA_PROJECT_BOARD_NAME: 'Project Board'
     JIRA_ISSUE_TYPE: 'Task'
+    JIRA_ISSUE_SUMMARY: 'Automated issue from GitHub Actions'
+    JIRA_ISSUE_DESCRIPTION: 'This issue was created automatically by GitHub Actions workflow'
     JIRA_ISSUE_STATUS: 'In Progress'
     JIRA_ASSIGN_TO_CURRENT_SPRINT: 'true'
     JIRA_ASSIGN_TO_CURRENT_RELEASE: 'true'

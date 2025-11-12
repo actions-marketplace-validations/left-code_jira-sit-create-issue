@@ -33,6 +33,12 @@ inputs:
   jira_issue_type:
     description: The type of issue to create (e.g., Task, Bug, Story)
     required: true
+  jira_issue_summary:
+    description: The summary/title of the issue to create
+    required: true
+  jira_issue_description:
+    description: The description of the issue to create
+    required: true
   jira_issue_status:
     description: The status to set for the created issue (optional)
     required: false

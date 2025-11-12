@@ -22,10 +22,16 @@ param (
     [string] $IssueStatus = $Env:JIRA_ISSUE_STATUS,
 
     [Parameter()]
-    [bool] $assigntoCurrentSprint = ($Env:JIRA_ASSIGN_TO_CURRENT_SPRINT -eq 'True'),
+    [bool] $AssigntoCurrentSprint = ($Env:JIRA_ASSIGN_TO_CURRENT_SPRINT -eq 'True'),
 
     [Parameter()]
-    [bool] $assignToCurrentRelease = ($Env:JIRA_ASSIGN_TO_CURRENT_RELEASE -eq 'True')
+    [bool] $AssignToCurrentRelease = ($Env:JIRA_ASSIGN_TO_CURRENT_RELEASE -eq 'True'),
+
+    [Parameter()]
+    [string] $IssueSummary = $Env:JIRA_ISSUE_SUMMARY,
+
+    [Parameter()]
+    [string] $IssueDescription = $Env:JIRA_ISSUE_DESCRIPTION
 )
 
 function Get-JiraAuthHeader {
@@ -53,7 +59,7 @@ function Get-JiraCurrentRelease {
         [string] $ProjectKey
     )
 
-    if (-not $assignToCurrentRelease) {
+    if (-not $AssignToCurrentRelease) {
         return $null
     }
 
@@ -77,7 +83,7 @@ function Get-JiraActiveSprint {
         [string] $ProjectKey
     )
 
-    if (-not $assigntoCurrentSprint) {
+    if (-not $AssigntoCurrentSprint) {
         return $null
     }
 
@@ -183,7 +189,7 @@ function Set-JiraIssueStatus {
     return $response
 }
 
-$newIssue = New-JiraIssue -JiraUrl $JiraUrl -ProjectKey $ProjectKey -Summary "Test issue from Actions with current Sprint and Release" -Description "Created using Actions via REST API and assigned to current Sprint and latest Release" -IssueType "External Request" -JiraUser $JiraUser -JiraPat $JiraPat
+$newIssue = New-JiraIssue -JiraUrl $JiraUrl -ProjectKey $ProjectKey -Summary $IssueSummary -Description $IssueDescription -IssueType $IssueType -JiraUser $JiraUser -JiraPat $JiraPat
 
 if ($IssueStatus) {
     $transitionId = Get-JiraIssueStatusId -JiraUrl $JiraUrl -IssueKey $newIssue -JiraUser $JiraUser -JiraPat $JiraPat -StatusName $IssueStatus
