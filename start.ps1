@@ -193,6 +193,9 @@ function Set-JiraIssueStatus {
 }
 
 if ($PrNumber) {
+    # Fix: failed to run git: fatal: detected dubious ownership in repository at '/github/workspace'
+	git config --global --add safe.directory /github/workspace
+
     # Check is issue already created, i.e. find is any comment contains Jira issue key pattern
     $allPrComments = gh pr view "$PrNumber" --json comments --jq '.comments[].body'
     $existingIssueKeys = $allPrComments | Where-Object { $_ -match "$ProjectKey-[0-9]+" }
