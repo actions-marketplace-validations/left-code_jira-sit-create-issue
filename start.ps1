@@ -31,7 +31,10 @@ param (
     [string] $IssueSummary = $Env:JIRA_ISSUE_SUMMARY,
 
     [Parameter()]
-    [string] $IssueDescription = $Env:JIRA_ISSUE_DESCRIPTION
+    [string] $IssueDescription = $Env:JIRA_ISSUE_DESCRIPTION,
+
+    [Parameter()]
+    [string] $PrNumber = $Env:PR_NUMBER
 )
 
 function Get-JiraAuthHeader {
@@ -187,6 +190,16 @@ function Set-JiraIssueStatus {
 
     $response = Invoke-RestMethod -Uri "$JiraUrl/rest/api/3/issue/$IssueKey/transitions" -Headers $headers -Method Post -Body $body
     return $response
+}
+
+# Check is issue already created, i.e. find is any comment contains Jira issue key pattern
+$allPrComments = gh pr view "$PrNumber" --json comments --jq '.comments[].body'
+$existingIssueKeys = $allPrComments | Where-Object { $_ -match "$ProjectKey-[0-9]+" }
+if ($existingIssueKeys) {
+    # Extract only the first matching issue key
+    $existingIssueKey = ($existingIssueKeys -match "$ProjectKey-[0-9]+") | Out-Null; $Matches[0]
+    Write-Output "Jira issue already exists: $existingIssueKey"
+    exit 0
 }
 
 $newIssue = New-JiraIssue -JiraUrl $JiraUrl -ProjectKey $ProjectKey -Summary $IssueSummary -Description $IssueDescription -IssueType $IssueType -JiraUser $JiraUser -JiraPat $JiraPat
