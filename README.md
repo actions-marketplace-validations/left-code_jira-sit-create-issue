@@ -128,6 +128,7 @@ When used with pull requests, the action provides additional functionality:
   pull_request:
     types: [opened]
 
+```yaml
 jobs:
   create-jira-issue:
     runs-on: ubuntu-latest
