@@ -192,14 +192,16 @@ function Set-JiraIssueStatus {
     return $response
 }
 
-# Check is issue already created, i.e. find is any comment contains Jira issue key pattern
-$allPrComments = gh pr view "$PrNumber" --json comments --jq '.comments[].body'
-$existingIssueKeys = $allPrComments | Where-Object { $_ -match "$ProjectKey-[0-9]+" }
-if ($existingIssueKeys) {
-    # Extract only the first matching issue key
-    $existingIssueKey = ($existingIssueKeys -match "$ProjectKey-[0-9]+") | Out-Null; $Matches[0]
-    Write-Output "Jira issue already exists: $existingIssueKey"
-    exit 0
+if ($PrNumber) {
+    # Check is issue already created, i.e. find is any comment contains Jira issue key pattern
+    $allPrComments = gh pr view "$PrNumber" --json comments --jq '.comments[].body'
+    $existingIssueKeys = $allPrComments | Where-Object { $_ -match "$ProjectKey-[0-9]+" }
+    if ($existingIssueKeys) {
+        # Extract only the first matching issue key
+        $existingIssueKey = ($existingIssueKeys -match "$ProjectKey-[0-9]+") | Out-Null; $Matches[0]
+        Write-Output "Jira issue already exists: $existingIssueKey"
+        exit 0
+    }
 }
 
 $newIssue = New-JiraIssue -JiraUrl $JiraUrl -ProjectKey $ProjectKey -Summary $IssueSummary -Description $IssueDescription -IssueType $IssueType -JiraUser $JiraUser -JiraPat $JiraPat
@@ -211,4 +213,11 @@ if ($IssueStatus) {
     }
 }
 
+if ($PrNumber) {
+    # Add comment to the PR with the created issue link
+    $link = "[{0}]({1}/browse/{0})" -f "$newIssue", "$JiraUrl"
+    gh pr comment "$PrNumber" --body "$link"
+}
+
+# Output the created issue key
 echo "jira_issue_id=$($newIssue)" >> $env:GITHUB_OUTPUT
