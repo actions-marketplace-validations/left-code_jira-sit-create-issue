@@ -73,7 +73,7 @@ function Get-JiraCurrentRelease {
 
     # Get current project release
     $releases = Invoke-RestMethod -Uri "$JiraUrl/rest/api/3/project/$($project.id)/versions" -Headers $headers -Method Get
-    $currentRelease = $releases | Where-Object { $_.released -eq $false } | Sort-Object -Property releaseDate | Select-Object -First 1
+    $currentRelease = $releases | Where-Object { ($_.released -eq $false) -and (((Get-Date) -ge [datetime]$_.startDate) -and ((Get-date) -le [datetime]$_.releaseDate) ) } | Sort-Object -Property releaseDate | Select-Object -First 1
 
     return $currentRelease
 }
