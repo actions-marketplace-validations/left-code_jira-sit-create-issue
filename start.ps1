@@ -220,6 +220,9 @@ if ($PrNumber) {
     # Add comment to the PR with the created issue link
     $link = "[{0}]({1}/browse/{0})" -f "$newIssue", "$JiraUrl"
     gh pr comment "$PrNumber" --body "$link"
+    # Add prefix to the PR title
+    $prTitle = gh pr view "$PrNumber" --json title --jq '.title'
+    gh pr edit "$PrNumber" --title "[${newIssue}] $prTitle"
 }
 
 # Output the created issue key
