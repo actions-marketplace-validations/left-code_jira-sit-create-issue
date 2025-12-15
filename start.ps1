@@ -73,7 +73,7 @@ function Get-JiraCurrentRelease {
 
     # Get current project release
     $releases = Invoke-RestMethod -Uri "$JiraUrl/rest/api/3/project/$($project.id)/versions" -Headers $headers -Method Get
-    $currentRelease = $releases | Where-Object { $_.released -eq $false } | Sort-Object -Property releaseDate | Select-Object -First 1
+    $currentRelease = $releases | Where-Object { ($_.released -eq $false) -and ($_.overdue -eq $false) -and ([datetime]$_.startDate -le (Get-Date -Format "yyyy-MM-dd")) -and ([datetime]$_.releaseDate -ge (Get-Date -Format "yyyy-MM-dd")) } | Sort-Object -Property releaseDate | Select-Object -First 1
 
     return $currentRelease
 }
@@ -220,6 +220,9 @@ if ($PrNumber) {
     # Add comment to the PR with the created issue link
     $link = "[{0}]({1}/browse/{0})" -f "$newIssue", "$JiraUrl"
     gh pr comment "$PrNumber" --body "$link"
+    # Add prefix to the PR title
+    $prTitle = gh pr view "$PrNumber" --json title --jq '.title'
+    gh pr edit "$PrNumber" --title "[${newIssue}] $prTitle"
 }
 
 # Output the created issue key
